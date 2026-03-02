@@ -29,7 +29,7 @@ namespace WebAppTest.Controllers
         public async Task<IActionResult> RandomQuote()
         {
             var data = await _context.Quotes.ToListAsync();
-            var randNum = Random.Shared.Next(1, data.Count());
+            var randNum = Random.Shared.Next(0, data.Count());
             string[] result = { data[randNum].Quotee, data[randNum].Author };
             return Ok(result);
         }
