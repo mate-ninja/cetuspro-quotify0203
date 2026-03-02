@@ -1,0 +1,16 @@
+﻿using cetuspro0203.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using cetuspro0203.Entities;
+
+namespace cetuspro0203.Data
+{
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions options) : base(options)
+        {
+        }
+        public DbSet<Quote> Quotes { get; set; }
+    }
+}
