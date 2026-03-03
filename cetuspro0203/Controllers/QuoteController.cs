@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cetuspro0203.Entities;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
+using Google.GenAI.Types;
+using Google.GenAI;
 
 namespace cetuspro0203.Controllers
 {
@@ -21,7 +24,7 @@ namespace cetuspro0203.Controllers
         [HttpGet]
         public async Task<IActionResult> GetQuotes()
         {
-            var result = await _context.Quotes.ToListAsync();
+            var result = await _context.Cytaty.ToListAsync();
 
             return Ok(result);
         }
@@ -30,18 +33,18 @@ namespace cetuspro0203.Controllers
 
         public async Task<IActionResult> RandomQuote()
         {
-            var data = await _context.Quotes.ToListAsync();
+            var data = await _context.Cytaty.ToListAsync();
             var randNum = Random.Shared.Next(0, data.Count());
-            string[] result = { data[randNum].Quotee, data[randNum].Author };
+            string[] result = { data[randNum].Cytat, data[randNum].Autor };
             return Ok(result);
         }
 
         [Authorize]
         [HttpPost]
 
-        public async Task<IActionResult> CreateQuote([FromBody] Quote quote)
+        public async Task<IActionResult> CreateQuote([FromBody] Cytaty quote)
         {
-            _context.Quotes.Add(quote);
+            _context.Cytaty.Add(quote);
             await _context.SaveChangesAsync();
 
             return Ok(quote);
@@ -52,8 +55,8 @@ namespace cetuspro0203.Controllers
 
         public async Task<IActionResult> EditQuote(int id, [FromBody] EditedQuote quote)
         {
-            var rows = await _context.Quotes.Where(x => x.Id == id)
-            .ExecuteUpdateAsync(x => x.SetProperty(x => x.Id, id).SetProperty(x => x.Quotee, quote.Quotee).SetProperty(x => x.Author, quote.Author));
+            var rows = await _context.Cytaty.Where(x => x.Id == id)
+            .ExecuteUpdateAsync(x => x.SetProperty(x => x.Id, id).SetProperty(x => x.Cytat, quote.Cytat).SetProperty(x => x.Autor, quote.Autor));
 
             return Ok(rows);
         }
@@ -62,9 +65,23 @@ namespace cetuspro0203.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteQuote(int id)
         {
-            var rows = await _context.Quotes.Where(x => x.Id == id).ExecuteDeleteAsync();
+            var rows = await _context.Cytaty.Where(x => x.Id == id).ExecuteDeleteAsync();
 
             return Ok(rows);
         }
+        /*[Authorize]
+        [HttpPost]
+
+        public async Task<IActionResult> GenerateQuote([FromBody] Quote quote)
+        {
+            var client = new Client(null, "AIzaSyAowCm1TrR9on_ig2eYmP6lmPnb_iG5ppQ");
+            var response = await client.Models.GenerateContentAsync(
+            model: "gemini-3-flash-preview", contents: "Wygeneruj losowy cytat. Nie pisz absolutnie niczego innego niż Cytat i autora. Wygeneruj to w formacie obiektu C#");
+
+            _context.Quotes.Add(new Quote { });
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }*/
     }
 }

@@ -10,6 +10,6 @@ namespace cetuspro0203.Data
         public AppDbContext(DbContextOptions options) : base(options)
         {
         }
-        public DbSet<Quote> Quotes { get; set; }
+        public DbSet<Cytaty> Cytaty { get; set; }
     }
 }

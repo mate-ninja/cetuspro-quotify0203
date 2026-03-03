@@ -21,7 +21,7 @@ namespace cetuspro0203.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("cetuspro0203.Entities.Quote", b =>
+            modelBuilder.Entity("cetuspro0203.Entities.Cytaty", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -29,11 +29,11 @@ namespace cetuspro0203.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Author")
+                    b.Property<string>("Autor")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Quotee")
+                    b.Property<string>("Cytat")
                         .IsRequired()
                         .HasColumnType("text");
 

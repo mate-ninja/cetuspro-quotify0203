@@ -1,9 +1,9 @@
 ﻿namespace cetuspro0203.Entities
 {
-    public class Quote
+    public class Cytaty
     {
         public int Id { get; set; }
-        public required string Quotee { get; set; }
-        public required string Author { get; set; }
+        public required string Cytat { get; set; }
+        public required string Autor { get; set; }
     }
 }

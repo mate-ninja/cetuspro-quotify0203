@@ -12,17 +12,17 @@ namespace cetuspro0203.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Quotes",
+                name: "Cytaty",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Quotee = table.Column<string>(type: "text", nullable: false),
-                    Author = table.Column<string>(type: "text", nullable: false)
+                    Cytat = table.Column<string>(type: "text", nullable: false),
+                    Autor = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Quotes", x => x.Id);
+                    table.PrimaryKey("Cytaty_pkey", x => x.Id);
                 });
         }
 
@@ -30,7 +30,7 @@ namespace cetuspro0203.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Quotes");
+                name: "Cytaty");
         }
     }
 }
