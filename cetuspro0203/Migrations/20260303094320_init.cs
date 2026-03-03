@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Npgsql.Internal.Postgres;
 
 #nullable disable
 
@@ -18,7 +19,8 @@ namespace cetuspro0203.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Cytat = table.Column<string>(type: "text", nullable: false),
-                    Autor = table.Column<string>(type: "text", nullable: false)
+                    Autor = table.Column<string>(type: "text", nullable: false),
+                    CzasUtworzenia = table.Column<DateTime>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

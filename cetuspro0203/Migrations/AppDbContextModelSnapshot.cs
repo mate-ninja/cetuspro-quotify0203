@@ -37,6 +37,10 @@ namespace cetuspro0203.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Cytat")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Quotes");

@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cetuspro0203.Entities;
 using Microsoft.AspNetCore.Authorization;
+using System;
 using System.Threading.Tasks;
 using Google.GenAI.Types;
 using Google.GenAI;
 
 namespace cetuspro0203.Controllers
+
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -69,19 +71,21 @@ namespace cetuspro0203.Controllers
 
             return Ok(rows);
         }
+
         /*[Authorize]
         [HttpPost]
 
-        public async Task<IActionResult> GenerateQuote([FromBody] Quote quote)
+        public async Task<IActionResult> GenerateQuote()
         {
-            var client = new Client(null, "AIzaSyAowCm1TrR9on_ig2eYmP6lmPnb_iG5ppQ");
+            var apiKey = "AIzaSyAowCm1TrR9on_ig2eYmP6lmPnb_iG5ppQ";
+            var client = new Client();
             var response = await client.Models.GenerateContentAsync(
             model: "gemini-3-flash-preview", contents: "Wygeneruj losowy cytat. Nie pisz absolutnie niczego innego niż Cytat i autora. Wygeneruj to w formacie obiektu C#");
 
-            _context.Quotes.Add(new Quote { });
-            await _context.SaveChangesAsync();
+            //var cytat_ai = new Cytaty { Id = _context.Cytaty.Last().Id}
+            //await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(response.Candidates[0].Content.Parts[0].Text);
         }*/
     }
 }
