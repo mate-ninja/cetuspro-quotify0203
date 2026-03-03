@@ -12,22 +12,27 @@ using System.Text;
 public class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
+    private readonly IWebHostEnvironment _environment;
     private readonly string _jwtKeyString;
-    public AuthController(IConfiguration configuration)
+
+    public AuthController(IConfiguration configuration, IWebHostEnvironment environment)
     {
-        _jwtKeyString = configuration["JWT:key"];
+        _configuration = configuration;
+        _environment = environment;
+
+        _jwtKeyString = _configuration["JWT:key"];
     }
 
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginRequest request)
     {
-        if (request.Username != "dante" || request.Password != "zegarek")
+        if (request.Username != _configuration["Auth:name"] || request.Password != _configuration["Auth:password"])
             return Unauthorized();
 
         var claims = new[]
         {
             new Claim(ClaimTypes.Name, request.Username),
-            new Claim(ClaimTypes.Role, "User")
+            new Claim(ClaimTypes.Role, "admin")
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtKeyString));

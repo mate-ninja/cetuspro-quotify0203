@@ -5,6 +5,12 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
+
 var jwtKey = builder.Configuration["JWT:key"];
 
 builder.Services.AddAuthentication(options =>
@@ -39,7 +45,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Add services to the container.
 builder.Services.AddAuthorization();
 builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
@@ -48,14 +53,12 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
