@@ -17,9 +17,12 @@ namespace cetuspro0203.Controllers
     public class QuoteController : ControllerBase
     {
         private readonly AppDbContext _context;
-
-        public QuoteController(AppDbContext context)
+        private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _environment;
+        public QuoteController(AppDbContext context, IConfiguration configuration, IWebHostEnvironment environment)
         {
+            _configuration = configuration;
+            _environment = environment;
             _context = context;
         }
         [Authorize]
@@ -77,7 +80,7 @@ namespace cetuspro0203.Controllers
 
         public async Task<IActionResult> GenerateQuote()
         {
-            var apiKey = "AIzaSyAowCm1TrR9on_ig2eYmP6lmPnb_iG5ppQ";
+            var apiKey = _configuration["GOOGLE:API_KEY"];
             var client = new Client();
             var response = await client.Models.GenerateContentAsync(
             model: "gemini-3-flash-preview", contents: "Wygeneruj losowy cytat. Nie pisz absolutnie niczego innego niż Cytat i autora. Wygeneruj to w formacie obiektu C#");
