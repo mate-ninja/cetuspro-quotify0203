@@ -37,7 +37,7 @@ namespace cetuspro0203.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Cytat")
+                    b.Property<string>("CzasUtworzenia")
                         .IsRequired()
                         .HasColumnType("text");
 
