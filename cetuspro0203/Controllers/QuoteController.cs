@@ -49,10 +49,13 @@ namespace cetuspro0203.Controllers
 
         public async Task<IActionResult> CreateQuote([FromBody] Cytaty quote)
         {
-            _context.Cytaty.Add(quote);
-            await _context.SaveChangesAsync();
+           var istniejace = await _context.Cytaty.Select(c => c.Id).ToListAsync();
+           quote.Id = Enumerable.Range(1, istniejace.Count + 1).Except(istniejace).First();
+           quote.CzasUtworzenia = DateTime.UtcNow.AddHours(1);
 
-            return Ok(quote);
+           _context.Cytaty.Add(quote);
+           await _context.SaveChangesAsync();
+           return Ok(quote);
         }
 
         [Authorize]
