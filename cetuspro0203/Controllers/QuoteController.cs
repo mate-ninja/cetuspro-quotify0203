@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using cetuspro0203.Entities;
+using Microsoft.AspNetCore.Authorization;
 
-namespace WebAppTest.Controllers
+namespace cetuspro0203.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -16,6 +17,7 @@ namespace WebAppTest.Controllers
         {
             _context = context;
         }
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetQuotes()
         {
