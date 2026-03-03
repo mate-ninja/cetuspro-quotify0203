@@ -33,5 +33,33 @@ namespace WebAppTest.Controllers
             string[] result = { data[randNum].Quotee, data[randNum].Author };
             return Ok(result);
         }
+
+        [HttpPost]
+
+        public async Task<IActionResult> CreateQuote([FromBody] Quote quote)
+        {
+            _context.Quotes.Add(quote);
+            await _context.SaveChangesAsync();
+
+            return Ok(quote);
+        }
+
+        [HttpPatch("{id}")]
+
+        public async Task<IActionResult> EditQuote(int id, [FromBody] EditedQuote quote)
+        {
+            var rows = await _context.Quotes.Where(x => x.Id == id)
+            .ExecuteUpdateAsync(x => x.SetProperty(x => x.Id, id).SetProperty(x => x.Quotee, quote.Quotee).SetProperty(x => x.Author, quote.Author));
+
+            return Ok(rows);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteQuote(int id)
+        {
+            var rows = await _context.Quotes.Where(x => x.Id == id).ExecuteDeleteAsync();
+
+            return Ok(rows);
+        }
     }
 }
