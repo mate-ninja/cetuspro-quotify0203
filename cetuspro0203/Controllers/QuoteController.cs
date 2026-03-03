@@ -36,6 +36,7 @@ namespace cetuspro0203.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [HttpPost]
 
         public async Task<IActionResult> CreateQuote([FromBody] Quote quote)
@@ -46,6 +47,7 @@ namespace cetuspro0203.Controllers
             return Ok(quote);
         }
 
+        [Authorize]
         [HttpPatch("{id}")]
 
         public async Task<IActionResult> EditQuote(int id, [FromBody] EditedQuote quote)
@@ -56,6 +58,7 @@ namespace cetuspro0203.Controllers
             return Ok(rows);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteQuote(int id)
         {
