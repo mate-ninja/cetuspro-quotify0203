@@ -34,6 +34,27 @@ jobs:
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
+  
+  biuld-next-js:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies and build Next.js
+        run: |
+          cd frontend                   
+          npm install
+          npm run build
+          cd ..
+
+      - name: Copy Next.js build to ASP.NET wwwroot
+        run: |
+          cp -r frontend/out/* cetuspro0203/wwwroot/
 
   deploy:
     runs-on: ubuntu-latest

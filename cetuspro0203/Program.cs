@@ -1,8 +1,11 @@
 using cetuspro0203.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Yarp.ReverseProxy;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
@@ -50,8 +53,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddSwaggerGen();
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
+app.UseHttpsRedirection();
 
 if (app.Environment.IsDevelopment())
 {
@@ -77,5 +85,17 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllers();
+app.MapReverseProxy();
+
+var nextJsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+if (Directory.Exists(nextJsPath))
+{
+    app.UseDefaultFiles();
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(nextJsPath)
+    });
+    app.MapFallbackToFile("index.html");
+}
 
 app.Run();
