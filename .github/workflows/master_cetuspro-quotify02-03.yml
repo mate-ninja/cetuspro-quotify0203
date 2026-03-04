@@ -62,4 +62,10 @@ jobs:
           app-name: 'cetuspro-quotify02-03'
           slot-name: 'Production'
           package: .
-          
+
+  finish:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: congratulate
+        run: echo "Gratulacje ${{ github.actor }}, kod jakimś cudem zadziałał"
