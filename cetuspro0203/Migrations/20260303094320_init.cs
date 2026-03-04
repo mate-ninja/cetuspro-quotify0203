@@ -26,13 +26,27 @@ namespace cetuspro0203.Migrations
                 {
                     table.PrimaryKey("Cytaty_pkey", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    Password = table.Column<string>(type: "text", nullable: false),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("User_pkey", x => x.Id);
+            });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Cytaty");
+            migrationBuilder.DropTable(name: "Cytaty");
+            migrationBuilder.DropTable(name: "User");
         }
     }
 }

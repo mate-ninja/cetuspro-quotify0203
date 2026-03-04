@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Google.GenAI.Types;
 using Google.GenAI;
+using Microsoft.AspNetCore.Identity;
 
 namespace cetuspro0203.Controllers
 
@@ -25,6 +26,19 @@ namespace cetuspro0203.Controllers
             _environment = environment;
             _context = context;
         }
+
+        //For debbuging
+        /*[HttpPatch("user/{id}")]
+
+        public async Task<IActionResult> EditUser(int id, [FromBody] LoginRequest user)
+        {
+            var hashed = new PasswordHasher<string>().HashPassword(user.Email, user.Password);
+            var rows = await _context.User.Where(x => x.Id == id)
+            .ExecuteUpdateAsync(x => x.SetProperty(x => x.Id, id).SetProperty(x => x.Email, user.Email).SetProperty(x => x.Password, hashed));
+
+            return Ok(rows);
+        }*/
+
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetQuotes()
@@ -77,21 +91,4 @@ namespace cetuspro0203.Controllers
 
             return Ok(rows);
         }
-
-        /*[Authorize]
-        [HttpPost]
-
-        public async Task<IActionResult> GenerateQuote()
-        {
-            var apiKey = _configuration["GOOGLE:API_KEY"];
-            var client = new Client();
-            var response = await client.Models.GenerateContentAsync(
-            model: "gemini-3-flash-preview", contents: "Wygeneruj losowy cytat. Nie pisz absolutnie niczego innego niż Cytat i autora. Wygeneruj to w formacie obiektu C#");
-
-            //var cytat_ai = new Cytaty { Id = _context.Cytaty.Last().Id}
-            //await _context.SaveChangesAsync();
-
-            return Ok(response.Candidates[0].Content.Parts[0].Text);
-        }*/
-    }
 }

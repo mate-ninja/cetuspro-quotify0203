@@ -26,12 +26,12 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginRequest request)
     {
-        if (request.Username != _configuration["Auth:name"] || request.Password != _configuration["Auth:password"])
+        if (request.Email != _configuration["Auth:email"] || request.Password != _configuration["Auth:password"])
             return Unauthorized();
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, request.Username),
+            new Claim(ClaimTypes.Email, request.Email),
             new Claim(ClaimTypes.Role, "admin")
         };
 
