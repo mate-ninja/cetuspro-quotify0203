@@ -6,27 +6,33 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 [ApiController]
 [Route("auth")]
 public class AuthController : ControllerBase
 {
+    private readonly PasswordHasher<string> _hasher = new PasswordHasher<string>();
+    private readonly AppDbContext _context;
     private readonly IConfiguration _configuration;
     private readonly IWebHostEnvironment _environment;
     private readonly string _jwtKeyString;
 
-    public AuthController(IConfiguration configuration, IWebHostEnvironment environment)
+    public AuthController(AppDbContext context, IConfiguration configuration, IWebHostEnvironment environment)
     {
         _configuration = configuration;
         _environment = environment;
+        _context = context;
 
         _jwtKeyString = _configuration["JWT:key"];
     }
 
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginRequest request)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        if (request.Email != _configuration["Auth:email"] || request.Password != _configuration["Auth:password"])
+
+        var hashCheck = _hasher.VerifyHashedPassword(request.Email, user.password, request.Password);
+        if (request.Email != _configuration["Auth:name"] || request.Password != _configuration["Auth:password"])
             return Unauthorized();
 
         var claims = new[]
