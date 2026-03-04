@@ -11,5 +11,6 @@ namespace cetuspro0203.Data
         {
         }
         public DbSet<Cytaty> Cytaty { get; set; }
+        public DbSet<LoginRequest> User { get; set; }
     }
 }
