@@ -30,14 +30,17 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-
-        var hashCheck = _hasher.VerifyHashedPassword(request.Email, user.password, request.Password);
-        if (request.Email != _configuration["Auth:name"] || request.Password != _configuration["Auth:password"])
+        var user = await _context.User.FirstOrDefaultAsync(u => u.Email == request.Email);
+        if (user == null)
+            return Unauthorized();
+        var hashCheck = _hasher.VerifyHashedPassword(request.Email, user.Password, request.Password);
+        if (hashCheck == PasswordVerificationResult.Failed)
             return Unauthorized();
 
         var claims = new[]
         {
             new Claim(ClaimTypes.Email, request.Email),
+            new Claim(ClaimTypes.NameIdentifier, request.Id.ToString()),
             new Claim(ClaimTypes.Role, "admin")
         };
 
