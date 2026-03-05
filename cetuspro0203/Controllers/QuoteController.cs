@@ -6,9 +6,12 @@ using cetuspro0203.Entities;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Google.GenAI.Types;
 using Google.GenAI;
 using Microsoft.AspNetCore.Identity;
+using System.Linq.Expressions;
 
 namespace cetuspro0203.Controllers
 
@@ -90,6 +93,99 @@ namespace cetuspro0203.Controllers
             var rows = await _context.Cytaty.Where(x => x.Id == id).ExecuteDeleteAsync();
 
             return Ok(rows);
+        }
+        public class AIQuoteResponse
+        {
+            public string Quote { get; set; }
+            public string Author { get; set; }
+        }
+
+        [Authorize]
+        [HttpPost("Generate-AI")]
+        public async Task<IActionResult> AIQuote()
+        {
+            var apiKey = _configuration["GOOGLE:API_KEY"];
+            var client = new Client(null, apiKey);
+
+            /*string[] characters = {
+            "Dante", "Vergilius", "Yi Sang", "Faust", "Don Quixote",
+            "Ryoshu", "Meursault", "Hong Lu", "Heathcliff", "Ishmael",
+            "Rodion", "Sinclair", "Outis", "Gregor", "Charon", "Kromer"
+            };
+            var randomChar = characters[Random.Shared.Next(characters.Length)];*/
+
+            var prompt = $@"
+        Wygeneruj losowy cytat. Po polsku. Używaj ludzi a nie konceptów jako autora. 
+        Zwróc TYLKO i wyłącznie Czysty obiekt JSON. nie używaj Markdown formatting.
+        JONS musi mieć taką strukturę:
+        {{
+            ""Quote"": ""Tekst idzie tutaj"",
+            ""Author"": ""Tutaj imię""
+        }}";
+            var config = new GenerateContentConfig
+            {
+                Temperature = 1.2f,
+                TopP = 0.95f,
+                TopK = 40,
+                ResponseMimeType = "application/json"
+            };
+
+                try
+            {
+                var response = await client.Models.GenerateContentAsync(
+                    model: "gemini-3.1-flash-lite-preview",
+                    contents: prompt,
+                    config: config
+                );
+
+                string rawText = "";
+
+                if (response.Candidates != null && response.Candidates.Count > 0)
+                {
+                    rawText = response.Candidates[0].Content.Parts[0].Text;
+
+                    rawText = rawText.Replace("```json", "").Replace("```", "").Trim();
+
+                    var aiData = JsonSerializer.Deserialize<AIQuoteResponse>(rawText, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                    if (aiData != null)
+                    {
+                        var newQuote = new Cytaty
+                        {
+                            Cytat = aiData.Quote,
+                            Autor = aiData.Author,
+                            CzasUtworzenia = DateTime.UtcNow.AddHours(1)
+                        };
+
+                        var istniejace = await _context.Cytaty.Select(c => c.Id).ToListAsync();
+
+                        if (istniejace.Any())
+                        {
+                            int nextId = 1;
+                            while (istniejace.Contains(nextId)) nextId++;
+                            newQuote.Id = nextId;
+                        }
+                        else
+                        {
+                            newQuote.Id = 1;
+                        }
+
+                        _context.Cytaty.Add(newQuote);
+                        await _context.SaveChangesAsync();
+
+                        return Ok(newQuote);
+                    }
+                }
+
+                return BadRequest("Nie pykło wariacie: " + rawText);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Error: {ex.Message}");
+            }
         }
     }
 }
