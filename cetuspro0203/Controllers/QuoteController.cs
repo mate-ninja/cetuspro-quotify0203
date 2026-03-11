@@ -100,9 +100,9 @@ namespace cetuspro0203.Controllers
             public string Author { get; set; }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("Generate-AI")]
-        public async Task<IActionResult> AIQuote()
+        public async Task<IActionResult> AIQuote([FromBody] Prompt zapytanie)
         {
             var apiKey = _configuration["GOOGLE:API_KEY"];
             var client = new Client(null, apiKey);
@@ -116,8 +116,8 @@ namespace cetuspro0203.Controllers
 
             var prompt = $@"
         Wygeneruj losowy cytat. Po polsku. Używaj ludzi a nie konceptów jako autora. 
-        Zwróc TYLKO i wyłącznie Czysty obiekt JSON. nie używaj Markdown formatting.
-        JONS musi mieć taką strukturę:
+        Zwróc TYLKO i wyłącznie Czysty obiekt JSON. nie używaj Markdown formatting. Cytat ma być na taki temat: ""{zapytanie.AIprompt}"".
+        JSON musi mieć taką strukturę:
         {{
             ""Quote"": ""Tekst idzie tutaj"",
             ""Author"": ""Tutaj imię""
