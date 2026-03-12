@@ -1,1 +1,2 @@
-# cetuspro-quotify0203
+# Quotify
+Quotify to strona z cytatami
