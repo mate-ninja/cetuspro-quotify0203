@@ -164,8 +164,8 @@ namespace cetuspro0203.Controllers
                         {
                             Cytat = aiData.Quote,
                             Autor = aiData.Author,
-                            Kategorie = null,
-                            Image_url = null,
+                            Kategorie = "",
+                            Image_url = "",
                             CzasUtworzenia = DateTime.UtcNow.AddHours(1)
                         };
 
