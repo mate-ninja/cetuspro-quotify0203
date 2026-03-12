@@ -20,7 +20,9 @@ namespace cetuspro0203.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Cytat = table.Column<string>(type: "text", nullable: false),
                     Autor = table.Column<string>(type: "text", nullable: false),
-                    CzasUtworzenia = table.Column<DateTime>(type: "text", nullable: false)
+                    CzasUtworzenia = table.Column<DateTime>(type: "text", nullable: false),
+                    Image_url = table.Column<string>(type: "text", nullable: true),
+                    Kategorie = table.Column<string>(type: "text", nullable:true)
                 },
                 constraints: table =>
                 {

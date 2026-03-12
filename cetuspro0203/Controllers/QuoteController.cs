@@ -1,17 +1,18 @@
 ﻿using cetuspro0203.Data;
+using cetuspro0203.Entities;
+using Google.GenAI;
+using Google.GenAI.Types;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using cetuspro0203.Entities;
-using Microsoft.AspNetCore.Authorization;
 using System;
-using System.Threading.Tasks;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Google.GenAI.Types;
-using Google.GenAI;
-using Microsoft.AspNetCore.Identity;
-using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace cetuspro0203.Controllers
 
@@ -81,7 +82,13 @@ namespace cetuspro0203.Controllers
         public async Task<IActionResult> EditQuote(int id, [FromBody] EditedQuote quote)
         {
             var rows = await _context.Cytaty.Where(x => x.Id == id)
-            .ExecuteUpdateAsync(x => x.SetProperty(x => x.Id, id).SetProperty(x => x.Cytat, quote.Cytat).SetProperty(x => x.Autor, quote.Autor));
+            .ExecuteUpdateAsync(x => x
+                .SetProperty(x => x.Id, id)
+                .SetProperty(x => x.Cytat, quote.Cytat)
+                .SetProperty(x => x.Autor, quote.Autor)
+                .SetProperty(x => x.Kategorie, quote.Kategorie)
+                .SetProperty(x => x.Image_url, quote.Image_url)
+            );
 
             return Ok(rows);
         }
@@ -157,6 +164,8 @@ namespace cetuspro0203.Controllers
                         {
                             Cytat = aiData.Quote,
                             Autor = aiData.Author,
+                            Kategorie = null,
+                            Image_url = null,
                             CzasUtworzenia = DateTime.UtcNow.AddHours(1)
                         };
 

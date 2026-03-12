@@ -41,6 +41,9 @@ namespace cetuspro0203.Migrations
                     b.Property<DateTime>("CzasUtworzenia")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Image_url").HasColumnType("text");
+                    b.Property<string>("Kategorie").HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Cytaty");
