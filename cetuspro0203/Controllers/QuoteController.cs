@@ -123,7 +123,7 @@ namespace cetuspro0203.Controllers
 
             var prompt = $@"
         Wygeneruj losowy cytat. Po polsku. Używaj ludzi a nie konceptów jako autora. 
-        Zwróc TYLKO i wyłącznie Czysty obiekt JSON. nie używaj Markdown formatting. Cytat ma być na taki temat: ""{zapytanie.AIprompt}"".
+        Zwróc TYLKO i wyłącznie Czysty obiekt JSON. nie używaj Markdown formatting. Cytat ma być na taki temat: ""{zapytanie.AIprompt}"", ten cytat jest z kategorii ""{zapytanie.Kategorie}"".
         JSON musi mieć taką strukturę:
         {{
             ""Quote"": ""Tekst idzie tutaj"",
@@ -164,7 +164,7 @@ namespace cetuspro0203.Controllers
                         {
                             Cytat = aiData.Quote,
                             Autor = aiData.Author,
-                            Kategorie = "",
+                            Kategorie = zapytanie.Kategorie,
                             Image_url = "",
                             CzasUtworzenia = DateTime.UtcNow.AddHours(1)
                         };
