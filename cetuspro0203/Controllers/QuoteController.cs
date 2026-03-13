@@ -54,9 +54,17 @@ namespace cetuspro0203.Controllers
 
         [HttpGet("random")]
 
-        public async Task<IActionResult> RandomQuote()
+        public async Task<IActionResult> RandomQuote([FromHeader] string? kategoria)
         {
             var data = await _context.Cytaty.ToListAsync();
+            if (!string.IsNullOrEmpty(kategoria))
+            {
+                data = await _context.Cytaty.Where(c => c.Kategorie == kategoria).ToListAsync();
+            }
+            if (data.Count == 0)
+            {
+                return StatusCode(418, "Brak cytatów w bazie, ale zobacz kod błędu");
+            }
             var randNum = Random.Shared.Next(0, data.Count());
             string[] result = { data[randNum].Cytat, data[randNum].Autor };
             return Ok(result);
