@@ -65,8 +65,8 @@ namespace cetuspro0203.Controllers
             {
                 return StatusCode(418, "Brak cytatów w bazie, ale zobacz kod błędu");
             }
-            var randNum = Random.Shared.Next(0, data.Count());
-            string[] result = { data[randNum].Cytat, data[randNum].Autor };
+            var randNum = Random.Shared.Next(0, data.Count());           //mi na localhoście działało - Kinderu
+            string[] result = { data[randNum].Cytat, data[randNum].Autor, data[randNum].Image_url != "" ? data[randNum].Image_url : ""};
             return Ok(result);
         }
 
