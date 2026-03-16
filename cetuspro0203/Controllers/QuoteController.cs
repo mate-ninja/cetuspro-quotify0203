@@ -54,7 +54,7 @@ namespace cetuspro0203.Controllers
 
         [HttpGet("random")]
 
-        public async Task<IActionResult> RandomQuote([FromHeader] string? kategoria)
+        public async Task<IActionResult> RandomQuote([FromQuery] string? kategoria)
         {
             var data = await _context.Cytaty.ToListAsync();
             if (!string.IsNullOrEmpty(kategoria))
