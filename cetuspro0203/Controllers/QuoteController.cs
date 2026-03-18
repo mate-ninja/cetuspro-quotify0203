@@ -56,10 +56,16 @@ namespace cetuspro0203.Controllers
 
         public async Task<IActionResult> RandomQuote([FromQuery] string? kategoria)
         {
+            string[] badCategories = ["Limbus Company"];
+        
             var data = await _context.Cytaty.ToListAsync();
             if (!string.IsNullOrEmpty(kategoria))
             {
                 data = await _context.Cytaty.Where(c => c.Kategorie == kategoria).ToListAsync();
+            }
+            else
+            {
+                data = await _context.Cytaty.Where(c => !badCategories.Contains(c.Kategorie)).ToListAsync();
             }
             if (data.Count == 0)
             {
